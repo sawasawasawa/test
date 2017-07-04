@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.activitystarter">
 
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -20,17 +22,28 @@
         </activity>
         <activity
             android:name=".StudentDataActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StudentParcelableActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".parcelable.StudentParcelableActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StudentSerializableActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".parceler.StudentParcelerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TabbedFragmentActivity"
+            android:name=".AllTypesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".serializable.StudentSerializableActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".fragment.TabbedFragmentActivity"
             android:label="@string/title_activity_tabbed_fragment"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".SomeService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

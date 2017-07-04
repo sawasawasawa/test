@@ -22,9 +22,9 @@ before_script:
 
 env:
   matrix:
-    -NAME=App TEST=:sample:app:connectedDebugAndroidTest
-    -NAME=KotlinApp TEST=:sample:kotlinapp:connectedDebugAndroidTest
-    -NAME=Processing TEST=:activitystarter:test
+    - TEST=:sample:app:connectedDebugAndroidTest
+    - TEST=:activitystarter:test
+    - TEST=:activitystarter-compiler:test
 
 script:
   - ./gradlew $TEST -i

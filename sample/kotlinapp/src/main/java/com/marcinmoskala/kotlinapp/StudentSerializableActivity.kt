@@ -1,10 +1,9 @@
 package com.marcinmoskala.kotlinapp
 
-import android.os.Bundle
-import android.widget.TextView
-
 import activitystarter.Arg
 import activitystarter.MakeActivityStarter
+import android.os.Bundle
+import android.widget.TextView
 
 @MakeActivityStarter
 class StudentSerializableActivity : BaseActivity() {
@@ -19,8 +18,8 @@ class StudentSerializableActivity : BaseActivity() {
         val gradeView = findViewById(R.id.gradeView) as TextView
         val isPassingView = findViewById(R.id.isPassingView) as TextView
 
-        nameView.text = "Name: " + student!!.name
-        idView.text = "Id: " + student!!.id
-        gradeView.text = "Grade: " + student!!.grade
+        nameView.text = "Name: " + student?.name
+        idView.text = "Id: " + student?.id
+        gradeView.text = "Grade: " + student?.grade
     }
 }

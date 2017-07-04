@@ -1,15 +1,6 @@
-buildscript {
-    ext.kotlin_version = '1.0.6'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -37,26 +28,28 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
-
 dependencies {
     compile project(':activitystarter')
     kapt project(':activitystarter-compiler')
+    compile project(':activitystarter-parceler-arg-converter')
 
 // On local project use:
-//    compile 'com.github.MarcinMoskala.ActivityStarter:activitystarter:0.+'
-//    kapt 'com.github.MarcinMoskala.ActivityStarter:activitystarter-compiler:0.+'
+//    compile 'com.github.marcinmoskala.activitystarter:activitystarter:0.50'
+//    kapt 'com.github.marcinmoskala.activitystarter:activitystarter-compiler:0.50'
+
+    compile deps.supportAppcompatv7
+    compile deps.supportDesign
+    compile deps.jodaTime
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile deps.junit
+    androidTestCompile deps.uiAutomator
 }
 repositories {
     mavenCentral()
+// Remember about this:
+//    maven { url 'https://jitpack.io' }
 }

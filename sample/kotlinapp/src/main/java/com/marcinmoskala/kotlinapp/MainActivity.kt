@@ -1,9 +1,15 @@
 package com.marcinmoskala.kotlinapp
 
+import activitystarter.MakeActivityStarter
+import android.app.AlarmManager.RTC_WAKEUP
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.os.Bundle
-import android.widget.Button
+import com.marcinmoskala.kotlinapp.notification.NotificationPublisherStarter
 import kotlinx.android.synthetic.main.activity_main.*
+import org.joda.time.DateTime
 
+@MakeActivityStarter
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,16 +19,16 @@ class MainActivity : BaseActivity() {
         showDataButton.setOnClickListener { startDetailsActivity() }
         showParcelableDataButton.setOnClickListener { startParcelableActivity() }
         showSerializableDataButton.setOnClickListener { startSerializableActivity() }
+        startNotification()
     }
 
-    fun performClickOn(id: Int) {
-        runOnUiThread {
-            val button = findViewById(id) as Button
-            button.performClick()
-        }
+    private fun startNotification() {
+        val intent = NotificationPublisherStarter.getIntent(this, notificationId, notificationTime)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, FLAG_UPDATE_CURRENT)
+        alarmManager.set(RTC_WAKEUP, System.currentTimeMillis() + 1000, pendingIntent)
     }
 
-    private fun startDetailsActivity() {
+    fun startDetailsActivity() {
         val gradeString = studentGradeView.text.toString()
         if (gradeString.length != 1) {
             studentGradeLayoutView.error = "You must provide some grade"
@@ -39,27 +45,32 @@ class MainActivity : BaseActivity() {
         try {
             val id = idString.toInt()
             if (name.isNullOrBlank()) {
-                StudentDataActivityStarter.start(this@MainActivity, id, grade, isPassing)
+                StudentDataActivityStarter.start(this, id, grade, isPassing)
             } else {
-                StudentDataActivityStarter.start(this@MainActivity, name, id, grade, isPassing)
+                StudentDataActivityStarter.start(this, name, id, grade, isPassing)
             }
         } catch (e: NumberFormatException) {
             // Id is not valid
             if (name.isNullOrBlank()) {
-                StudentDataActivityStarter.start(this@MainActivity, grade, isPassing)
+                StudentDataActivityStarter.start(this, grade, isPassing)
             } else {
-                StudentDataActivityStarter.start(this@MainActivity, name, grade, isPassing)
+                StudentDataActivityStarter.start(this, name, grade, isPassing)
             }
         }
     }
 
-    private fun startParcelableActivity() {
-        val student = StudentParcelable(10, "Marcin", 'A')
-        StudentParcelableActivityStarter.start(this@MainActivity, student)
+    fun startParcelableActivity() {
+        StudentParcelableActivityStarter.start(this, parcelableStudent)
     }
 
-    private fun startSerializableActivity() {
-        val student = StudentSerializable(20, "Marcin Moskala", 'A', true)
-        StudentSerializableActivityStarter.start(this@MainActivity, student)
+    fun startSerializableActivity() {
+        StudentSerializableActivityStarter.start(this, serializableStudent)
+    }
+
+    companion object {
+        val notificationId = 10
+        val notificationTime = DateTime.now().toString("HH:mm")
+        val parcelableStudent = StudentParcelable(10, "Marcin", 'A')
+        val serializableStudent = StudentSerializable(20, "Marcin Moskala", 'A', true)
     }
 }

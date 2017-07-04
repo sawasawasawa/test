@@ -1,14 +1,16 @@
 package com.marcinmoskala.kotlinapp
 
+import activitystarter.ActivityStarter
+import activitystarter.ActivityStarterConfig
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.marcinmoskala.activitystarterparcelerargconverter.ParcelerArgConverter
 
-import activitystarter.ActivityStarter
-
+@ActivityStarterConfig(converters = arrayOf(ParcelerArgConverter::class))
 open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ActivityStarter.fill(this)
+        ActivityStarter.fill(this, savedInstanceState)
     }
 }

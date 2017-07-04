@@ -1,13 +1,10 @@
 buildscript {
-  ext.kotlin_version = '1.0.6'
-
   repositories {
     mavenCentral()
   }
 
   dependencies {
     classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 
   repositories {
@@ -33,6 +30,7 @@ for (File file : sdkHandler.sdkLoader.repositories) {
 
 dependencies {
   compile project(':activitystarter-annotations')
+  compile deps.kotlin
   compile deps.autoservice
   compile deps.autocommon
   compile deps.javapoet
@@ -40,11 +38,45 @@ dependencies {
 
   testCompile deps.junit
   testCompile deps.truth
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  testCompile deps.compiletesting
+  testCompile deps.kotlin_reflect
+  testCompile deps.kotlin_test
+  testCompile deps.kotlin_junit
+  testCompile deps.android
 }
 repositories {
   mavenCentral()
 }
 sourceSets {
   main.java.srcDirs += 'src/main/kotlin'
+}
+
+
+// Fancy test print
+tasks.withType(Test) {
+  testLogging {
+    // set options for log level LIFECYCLE
+    events "passed", "skipped", "failed", "standardOut"
+    showExceptions true
+    exceptionFormat "full"
+    showCauses true
+    showStackTraces true
+
+    // set options for log level DEBUG and INFO
+    debug {
+      events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+      exceptionFormat "full"
+    }
+    info.events = debug.events
+    info.exceptionFormat = debug.exceptionFormat
+
+    afterSuite { desc, result ->
+      if (!desc.parent) { // will match the outermost suite
+        def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+        def startItem = '|  ', endItem = '  |'
+        def repeatLength = startItem.length() + output.length() + endItem.length()
+        println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+      }
+    }
+  }
 }
